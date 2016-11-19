@@ -1,5 +1,6 @@
 package com.codetroopers.betterpickers.sample.activity.calendardatepicker;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,8 @@ public class SampleCalendarDateBasicUsage extends BaseSampleActivity
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
 
     private TextView mResultTextView;
+    private CalendarDatePickerDialogFragment cdp;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,8 +32,15 @@ public class SampleCalendarDateBasicUsage extends BaseSampleActivity
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-                        .setOnDateSetListener(SampleCalendarDateBasicUsage.this);
+                if (cdp == null) {
+                    cdp = new CalendarDatePickerDialogFragment()
+                            .setOnDateSetListener(SampleCalendarDateBasicUsage.this);
+                } else if (!cdp.isAdded()) {
+                    Dialog dialog = cdp.getDialog();
+                    if (dialog != null && dialog.isShowing()) {
+                        return;
+                    }
+                }
                 cdp.show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
